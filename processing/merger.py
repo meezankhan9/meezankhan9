@@ -9,8 +9,24 @@ from collectors.twitter import SCHEMA
 
 
 def merge_posts(dfs: Sequence[pd.DataFrame]) -> pd.DataFrame:
-    df = pd.concat([d for d in dfs if not d.empty], ignore_index=True)
-    if not df.empty:
-        df = df[SCHEMA]
-    return df
+    """Merge collected posts into a single DataFrame.
+
+    Parameters
+    ----------
+    dfs:
+        Sequence of dataframes gathered from various collectors.
+
+    Returns
+    -------
+    pd.DataFrame
+        A dataframe containing the merged posts constrained to ``SCHEMA``.
+        If all inputs are empty, an empty dataframe with ``SCHEMA`` columns is
+        returned.
+    """
+
+    valid = [d for d in dfs if not d.empty]
+    if not valid:
+        return pd.DataFrame(columns=SCHEMA)
+    df = pd.concat(valid, ignore_index=True)
+    return df[SCHEMA]
 
