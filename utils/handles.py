@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Dict, Optional
 
-from duckduckgo_search import DDGS
+from ddgs import DDGS
 
 
 PLATFORM_PATTERNS = {
