@@ -2,13 +2,9 @@
 from __future__ import annotations
 
 import streamlit as st
-import pandas as pd
 
 from utils.handles import detect_handles
-from collectors.twitter import collect_twitter
-from collectors.instagram import collect_instagram
-from collectors.youtube import collect_youtube
-from processing.merger import merge_posts
+from collectors import collect_all
 from analysis.audit import generate_audit
 from utils.io import save_raw, save_master, save_report
 
@@ -27,30 +23,18 @@ if st.button("Search & Analyze") and name:
     handles = detect_handles(name)
     st.write("Detected handles:", handles)
 
-    dfs = []
-    if handle := handles.get("twitter"):
-        df = collect_twitter(handle, months)
-        if not df.empty:
-            save_raw(df, "twitter", handle)
-            dfs.append(df)
-    if handle := handles.get("instagram"):
-        df = collect_instagram(handle, months)
-        if not df.empty:
-            save_raw(df, "instagram", handle)
-            dfs.append(df)
-    if yt_key and (handle := handles.get("youtube")):
-        df = collect_youtube(handle, yt_key, months)
-        if not df.empty:
-            save_raw(df, "youtube", handle)
-            dfs.append(df)
-
-    master = merge_posts(dfs)
+    master = collect_all(handles, months, yt_key)
     if not master.empty:
+        for platform, df in master.groupby("platform"):
+            handle = handles.get(platform, "")
+            save_raw(df, platform, handle)
         save_master(master)
         report = generate_audit(master, name)
         save_report(report, name)
         st.markdown(report)
-        st.download_button("Download report", report, file_name=f"{name}_audit.md")
+        st.download_button(
+            "Download report", report, file_name=f"{name}_audit.md"
+        )
     else:
         st.warning("No data collected.")
 
