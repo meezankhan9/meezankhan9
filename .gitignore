@@ -1,0 +1,13 @@
+# Ignore data and build outputs but keep placeholders
+/data/*
+!/data/.gitkeep
+!/data/raw/
+/data/raw/*
+!/data/raw/.gitkeep
+/build/*
+!/build/.gitkeep
+!/build/reports/
+/build/reports/*
+!/build/reports/.gitkeep
+__pycache__/
+*.pyc

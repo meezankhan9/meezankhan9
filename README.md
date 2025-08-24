@@ -56,3 +56,20 @@ With over 9 years of experience in cloud architecture, DevOps, performance engin
 ---
 
 ⬆️ *Check out the pinned repos above to see my hands-on projects!*
+
+## Running Neuro Ninja
+
+```powershell
+# create and activate virtual env
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+
+# install requirements
+pip install -r requirements.txt
+
+# run Streamlit app
+python -m streamlit run app\onebar.py
+
+# or run from CLI
+python -m src.pipeline.run_audit --name "Narendra Modi" --months 6
+```

@@ -1,0 +1,6 @@
+streamlit
+pandas
+duckduckgo-search
+snscrape
+instaloader
+google-api-python-client
