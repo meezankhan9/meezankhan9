@@ -1,6 +1,6 @@
 streamlit
 pandas
 duckduckgo-search
-snscrape
+snscrape @ git+https://github.com/JustAnotherArchivist/snscrape.git@614d4c2029a62d348ca56598f87c425966aaec66
 instaloader
 google-api-python-client
