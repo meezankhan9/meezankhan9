@@ -6,7 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Iterable
 
@@ -28,7 +28,7 @@ def run(
     sentiment: bool = False,
 ) -> dict:
     handles = guess_handles(name)
-    since = datetime.utcnow() - timedelta(days=30 * months)
+    since = datetime.now(timezone.utc) - timedelta(days=30 * months)
     dfs: list[pd.DataFrame] = []
 
     if h := handles.get("x"):

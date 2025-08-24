@@ -3,9 +3,6 @@ from __future__ import annotations
 """Build neutral analytics report and pillar scores."""
 
 from collections import Counter
-from dataclasses import dataclass
-from datetime import datetime
-from math import exp
 from typing import Dict, Iterable
 
 import numpy as np
@@ -130,7 +127,7 @@ def _semantic_score(text: str, desc: str) -> float:
 
 
 def _post_weights(df: pd.DataFrame) -> np.ndarray:
-    now = pd.Timestamp.utcnow()
+    now = pd.Timestamp.now(tz="UTC")
     eng = df["likes"].fillna(0) + 2 * df["comments"].fillna(0) + 2 * df["shares"].fillna(0)
     max_eng = max(eng.max(), 1)
     w_eng = eng / max_eng
@@ -177,8 +174,8 @@ def build_summary(
 ) -> Dict[str, object]:
     """Generate summary markdown and pillar scores from merged posts."""
     df = pd.read_csv(master_csv)
-    df["datetime"] = pd.to_datetime(df["datetime"], errors="coerce")
-    cutoff = pd.Timestamp.utcnow() - pd.DateOffset(months=months_view)
+    df["datetime"] = pd.to_datetime(df["datetime"], errors="coerce", utc=True)
+    cutoff = pd.Timestamp.now(tz="UTC") - pd.DateOffset(months=months_view)
     df = df[df["datetime"] >= cutoff]
 
     candidate_df = df[df["is_competitor"] == False]

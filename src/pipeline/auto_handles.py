@@ -5,7 +5,7 @@ from __future__ import annotations
 from urllib.parse import urlparse
 from typing import Optional
 
-from duckduckgo_search import DDGS
+from ddgs import DDGS
 
 
 def _search_first(query: str) -> Optional[str]:

@@ -33,5 +33,5 @@ def merge_posts(dfs: Iterable[pd.DataFrame]) -> pd.DataFrame:
         return pd.DataFrame(columns=SCHEMA)
     df = pd.concat(dfs, ignore_index=True)
     df = df.reindex(columns=SCHEMA)
-    df["datetime"] = pd.to_datetime(df["datetime"], errors="coerce")
+    df["datetime"] = pd.to_datetime(df["datetime"], errors="coerce", utc=True)
     return df
