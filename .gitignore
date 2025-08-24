@@ -1,0 +1,6 @@
+# Ignore data and build outputs
+/data/
+/build/
+__pycache__/
+*.pyc
+
