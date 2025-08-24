@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta
+import logging
+import os
 
 import pandas as pd
 import instaloader
@@ -9,12 +11,25 @@ import instaloader
 from .twitter import SCHEMA  # reuse schema
 
 
+logger = logging.getLogger(__name__)
+
 loader = instaloader.Instaloader(
     quiet=True,
     download_geotags=False,
     download_comments=False,
     save_metadata=False,
+    user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/120.0 Safari/537.36",
 )
+
+# Optional login to improve reliability on protected endpoints
+_IG_USER = os.getenv("INSTAGRAM_USER")
+_IG_PASS = os.getenv("INSTAGRAM_PASS")
+if _IG_USER and _IG_PASS:  # pragma: no cover - requires credentials
+    try:
+        loader.login(_IG_USER, _IG_PASS)
+    except instaloader.exceptions.InstaloaderException as exc:
+        logger.warning("Instagram login failed: %s", exc)
 
 
 def collect_instagram(handle: str, months: int = 6) -> pd.DataFrame:
@@ -46,8 +61,8 @@ def collect_instagram(handle: str, months: int = 6) -> pd.DataFrame:
                     "is_competitor": False,
                 }
             )
-    except Exception:
-        pass
+    except instaloader.exceptions.InstaloaderException as exc:
+        logger.warning("Instagram scrape failed: %s", exc)
     df = pd.DataFrame(posts, columns=SCHEMA)
     return df
 
